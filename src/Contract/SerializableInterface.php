@@ -6,6 +6,9 @@ namespace Symplify\EasyParallel\Contract;
 
 use JsonSerializable;
 
+/**
+ * @api
+ */
 interface SerializableInterface extends JsonSerializable
 {
     /**
