@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Symplify\EasyParallel\Tests\CommandLine;
 
 use Iterator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -38,11 +39,10 @@ final class WorkerCommandLineFactoryTest extends TestCase
     }
 
     /**
-     * @dataProvider provideData()
-     *
      * @param class-string<Command> $commandClass
      * @param array<string, mixed> $inputParameters
      */
+    #[DataProvider('provideData')]
     public function test(
         string $commandClass,
         string $pathsOptionName,
@@ -66,14 +66,11 @@ final class WorkerCommandLineFactoryTest extends TestCase
         $this->assertSame($expectedCommand, $workerCommandLine);
     }
 
-    /**
-     * @return Iterator<array<int, array<string, string|string[]|bool>>|string[]>
-     */
-    public function provideData(): Iterator
+    public static function provideData(): Iterator
     {
         $cliInputOptions = array_slice($_SERVER['argv'], 1);
 
-        $expectedCommandLinesString = $this->createExpectedCommandLinesString($cliInputOptions);
+        $expectedCommandLinesString = self::createExpectedCommandLinesString($cliInputOptions);
 
         yield [
             MainCommand::class,
@@ -119,7 +116,7 @@ final class WorkerCommandLineFactoryTest extends TestCase
     /**
      * @param string[] $cliInputOptions
      */
-    private function createExpectedCommandLinesString(array $cliInputOptions): string
+    private static function createExpectedCommandLinesString(array $cliInputOptions): string
     {
         $commandLineString = "'" . PHP_BINARY . "' '" . self::DUMMY_MAIN_SCRIPT . "'";
 
