@@ -4,8 +4,8 @@ phpunit.xml export-ignore
 *.md export-ignore
 /tests export-ignore
 /packages-tests export-ignore
-/easy-ci.php
-/ecs.php
-/rector.php
-/phpunit.xml
-/phpstan.neon
+/easy-ci.php export-ignore
+/ecs.php export-ignore
+/rector.php export-ignore
+/phpunit.xml export-ignore
+/phpstan.neon export-ignore
