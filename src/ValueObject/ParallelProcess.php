@@ -6,7 +6,6 @@ namespace Symplify\EasyParallel\ValueObject;
 
 use Clue\React\NDJson\Decoder;
 use Clue\React\NDJson\Encoder;
-use Exception;
 use React\ChildProcess\Process;
 use React\EventLoop\LoopInterface;
 use React\EventLoop\TimerInterface;
@@ -98,11 +97,11 @@ final class ParallelProcess
     {
         $this->cancelTimer();
         $this->encoder->write($data);
-        $this->timer = $this->loop->addTimer($this->timetoutInSeconds, function (): void {
+        $this->timer = $this->loop->addTimer($this->timetoutInSeconds, function () use ($data): void {
             $onError = $this->onError;
 
             $errorMessage = sprintf('Child process timed out after %d seconds', $this->timetoutInSeconds);
-            $onError(new Exception($errorMessage));
+            $onError(new ChildProcessTimeoutException($errorMessage, $data));
         });
     }
 
