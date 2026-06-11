@@ -10,14 +10,14 @@ namespace Symplify\EasyParallel\ValueObject;
  *
  * @api
  */
-final class Schedule
+final readonly class Schedule
 {
     /**
      * @param array<array<string>> $jobs
      */
     public function __construct(
-        private readonly int $numberOfProcesses,
-        private readonly array $jobs
+        private int $numberOfProcesses,
+        private array $jobs
     ) {
     }
 

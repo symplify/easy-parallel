@@ -12,15 +12,15 @@ final class Action
     /**
      * @var string
      */
-    public const HELLO = 'hello';
+    public const string HELLO = 'hello';
 
     /**
      * @var string
      */
-    public const MAIN = 'main';
+    public const string MAIN = 'main';
 
     /**
      * @var string
      */
-    public const RESULT = 'result';
+    public const string RESULT = 'result';
 }

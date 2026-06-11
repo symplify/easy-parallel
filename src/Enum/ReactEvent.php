@@ -12,20 +12,20 @@ final class ReactEvent
     /**
      * @var string
      */
-    public const EXIT = 'exit';
+    public const string EXIT = 'exit';
 
     /**
      * @var string
      */
-    public const DATA = 'data';
+    public const string DATA = 'data';
 
     /**
      * @var string
      */
-    public const ERROR = 'error';
+    public const string ERROR = 'error';
 
     /**
      * @var string
      */
-    public const CONNECTION = 'connection';
+    public const string CONNECTION = 'connection';
 }

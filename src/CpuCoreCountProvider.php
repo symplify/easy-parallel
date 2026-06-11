@@ -15,7 +15,7 @@ final class CpuCoreCountProvider
     /**
      * @var int
      */
-    private const DEFAULT_CORE_COUNT = 2;
+    private const int DEFAULT_CORE_COUNT = 2;
 
     public function provide(): int
     {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Symplify\EasyParallel\Tests\CommandLine;
 
 use Iterator;
+use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Command\Command;
@@ -21,17 +22,18 @@ final class WorkerCommandLineFactoryTest extends TestCase
     /**
      * @var string
      */
-    private const COMMAND = 'command';
+    private const string COMMAND = 'command';
 
     /**
      * @var string
      */
-    private const DUMMY_MAIN_SCRIPT = 'main_script';
+    private const string DUMMY_MAIN_SCRIPT = 'main_script';
 
     private WorkerCommandLineFactory $workerCommandLineFactory;
 
     private CommandFromReflectionFactory $commandFromReflectionFactory;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->workerCommandLineFactory = new WorkerCommandLineFactory();
