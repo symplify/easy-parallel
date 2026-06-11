@@ -10,16 +10,10 @@ Speed up development of your PHP CLI Apps. Includes [7 Steps to Start with Paral
 composer require symplify/easy-parallel --dev
 ```
 
-## Usage
-
-@todo
-
-<br>
-
 ## Report Issues
 
-In case you are experiencing a bug or want to request a new feature head over to the [Symplify monorepo issue tracker](https://github.com/symplify/symplify/issues)
+In case you are experiencing a bug or want to request a new feature, head over to the [issue tracker](https://github.com/symplify/easy-parallel/issues).
 
 ## Contribute
 
-The sources of this package are contained in the Symplify monorepo. We welcome contributions for this package on [symplify/symplify](https://github.com/symplify/symplify).
+We welcome contributions. Open a pull request on [symplify/easy-parallel](https://github.com/symplify/easy-parallel).

@@ -9,8 +9,5 @@ namespace Symplify\EasyParallel\ValueObject;
  */
 final class EasyParallelConfig
 {
-    /**
-     * @var string
-     */
-    public const FILE_PATH = __DIR__ . '/../../config/config.php';
+    public const string FILE_PATH = __DIR__ . '/../../config/config.php';
 }
