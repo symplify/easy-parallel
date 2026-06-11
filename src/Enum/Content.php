@@ -9,13 +9,7 @@ namespace Symplify\EasyParallel\Enum;
  */
 final class Content
 {
-    /**
-     * @var string
-     */
     public const string RESULT = 'result';
 
-    /**
-     * @var string
-     */
     public const string FILES = 'files';
 }

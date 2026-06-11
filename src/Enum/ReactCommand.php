@@ -9,13 +9,7 @@ namespace Symplify\EasyParallel\Enum;
  */
 final class ReactCommand
 {
-    /**
-     * @var string
-     */
     public const string ACTION = 'action';
 
-    /**
-     * @var string
-     */
     public const string IDENTIFIER = 'identifier';
 }

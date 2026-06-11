@@ -19,14 +19,8 @@ use Symplify\EasyParallel\Tests\CommandLine\Source\TestOption;
 
 final class WorkerCommandLineFactoryTest extends TestCase
 {
-    /**
-     * @var string
-     */
     private const string COMMAND = 'command';
 
-    /**
-     * @var string
-     */
     private const string DUMMY_MAIN_SCRIPT = 'main_script';
 
     private WorkerCommandLineFactory $workerCommandLineFactory;

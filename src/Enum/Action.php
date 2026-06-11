@@ -9,18 +9,9 @@ namespace Symplify\EasyParallel\Enum;
  */
 final class Action
 {
-    /**
-     * @var string
-     */
     public const string HELLO = 'hello';
 
-    /**
-     * @var string
-     */
     public const string MAIN = 'main';
 
-    /**
-     * @var string
-     */
     public const string RESULT = 'result';
 }

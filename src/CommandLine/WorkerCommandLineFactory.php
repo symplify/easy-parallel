@@ -15,9 +15,6 @@ use Symplify\EasyParallel\Reflection\CommandFromReflectionFactory;
  */
 final readonly class WorkerCommandLineFactory
 {
-    /**
-     * @var string
-     */
     private const string OPTION_DASHES = '--';
 
     /**
