@@ -5,56 +5,35 @@ declare(strict_types=1);
 namespace Symplify\EasyParallel\Tests\CommandLine;
 
 use Iterator;
-use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputDefinition;
 use Symplify\EasyParallel\CommandLine\WorkerCommandLineFactory;
-use Symplify\EasyParallel\Reflection\CommandFromReflectionFactory;
-use Symplify\EasyParallel\Tests\CommandLine\Source\MainCommand;
 use Symplify\EasyParallel\Tests\CommandLine\Source\TestOption;
 
 final class WorkerCommandLineFactoryTest extends TestCase
 {
-    private const string COMMAND = 'command';
-
     private const string DUMMY_MAIN_SCRIPT = 'main_script';
 
     private WorkerCommandLineFactory $workerCommandLineFactory;
 
-    private CommandFromReflectionFactory $commandFromReflectionFactory;
-
-    #[Override]
     protected function setUp(): void
     {
         $this->workerCommandLineFactory = new WorkerCommandLineFactory();
-        $this->commandFromReflectionFactory = new CommandFromReflectionFactory();
     }
 
     /**
-     * @param class-string<Command> $commandClass
-     * @param array<string, mixed> $inputParameters
+     * @param array<string, bool|string|int|null> $optionValues
+     * @param string[] $paths
      */
     #[DataProvider('provideData')]
-    public function test(
-        string $commandClass,
-        string $pathsOptionName,
-        array $inputParameters,
-        string $expectedCommand
-    ): void {
-        $inputDefinition = $this->prepareProcessCommandDefinition($commandClass);
-        $arrayInput = new ArrayInput($inputParameters, $inputDefinition);
-
+    public function test(array $optionValues, array $paths, string $expectedCommand): void
+    {
         $workerCommandLine = $this->workerCommandLineFactory->create(
             self::DUMMY_MAIN_SCRIPT,
-            $commandClass,
             'worker',
-            $pathsOptionName,
             null,
-            $arrayInput,
+            $optionValues,
+            $paths,
             'identifier',
             2000
         );
@@ -64,64 +43,17 @@ final class WorkerCommandLineFactoryTest extends TestCase
 
     public static function provideData(): Iterator
     {
-        $cliInputOptions = array_slice($_SERVER['argv'], 1);
+        $expectedCommandLinesString = self::createExpectedCommandLinesString();
 
-        $expectedCommandLinesString = self::createExpectedCommandLinesString($cliInputOptions);
+        yield [[], ['src'], $expectedCommandLinesString];
 
-        yield [
-            MainCommand::class,
-            TestOption::PATHS,
-            [
-                self::COMMAND => 'process',
-                TestOption::PATHS => ['src'],
-            ],
-            $expectedCommandLinesString,
-        ];
-
-        yield [
-            MainCommand::class,
-            TestOption::PATHS,
-            [
-                self::COMMAND => 'process',
-                TestOption::PATHS => ['src'],
-                '--' . TestOption::OUTPUT_FORMAT => 'console',
-            ],
-            $expectedCommandLinesString,
-        ];
+        // output-format is excluded, so it must not change the result
+        yield [[TestOption::OUTPUT_FORMAT => 'console'], ['src'], $expectedCommandLinesString];
     }
 
-    /**
-     * @param class-string<Command> $mainCommandClass
-     */
-    private function prepareProcessCommandDefinition(string $mainCommandClass): InputDefinition
-    {
-        $mainCommand = $this->commandFromReflectionFactory->create($mainCommandClass);
-
-        $inputDefinition = $mainCommand->getDefinition();
-
-        // not sure why, but the 1st argument "command" is missing; this is needed for a command name
-        $arguments = $inputDefinition->getArguments();
-        $commandInputArgument = new InputArgument(self::COMMAND, InputArgument::REQUIRED);
-        $arguments = array_merge([$commandInputArgument], $arguments);
-
-        $inputDefinition->setArguments($arguments);
-
-        return $inputDefinition;
-    }
-
-    /**
-     * @param string[] $cliInputOptions
-     */
-    private static function createExpectedCommandLinesString(array $cliInputOptions): string
+    private static function createExpectedCommandLinesString(): string
     {
         $commandLineString = "'" . PHP_BINARY . "' '" . self::DUMMY_MAIN_SCRIPT . "'";
-
-        // in some cases, the test does not have any options/args, e.g. when running it like "vendor/bin/phpunit"
-        // vs." vendor/bin/phpunit <some_arg>"
-        if ($cliInputOptions !== []) {
-            $cliInputOptionsAsString = implode("' '", $cliInputOptions);
-            $commandLineString .= " '" . $cliInputOptionsAsString . "'";
-        }
 
         return $commandLineString . " worker --port 2000 --identifier 'identifier' 'src' --output-format 'json' --no-ansi";
     }
