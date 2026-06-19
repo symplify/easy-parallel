@@ -43,18 +43,82 @@ final class WorkerCommandLineFactoryTest extends TestCase
 
     public static function provideData(): Iterator
     {
-        $expectedCommandLinesString = self::createExpectedCommandLinesString();
+        yield 'no options, single path' => [[], ['src'], self::wrap('', "'src'")];
 
-        yield [[], ['src'], $expectedCommandLinesString];
+        yield 'output-format is excluded' => [
+            [TestOption::OUTPUT_FORMAT => 'console'],
+            ['src'],
+            self::wrap('', "'src'"),
+        ];
 
-        // output-format is excluded, so it must not change the result
-        yield [[TestOption::OUTPUT_FORMAT => 'console'], ['src'], $expectedCommandLinesString];
+        yield 'true bool option becomes a flag' => [
+            [TestOption::FIX => true],
+            ['src'],
+            self::wrap('--fix', "'src'"),
+        ];
+
+        yield 'false bool option is omitted' => [
+            [TestOption::FIX => false],
+            ['src'],
+            self::wrap('', "'src'"),
+        ];
+
+        yield 'null option is omitted' => [
+            [TestOption::MEMORY_LIMIT => null],
+            ['src'],
+            self::wrap('', "'src'"),
+        ];
+
+        yield 'memory-limit uses the assign form' => [
+            [TestOption::MEMORY_LIMIT => '-1'],
+            ['src'],
+            self::wrap('--memory-limit=-1', "'src'"),
+        ];
+
+        yield 'string option keeps the escaped value' => [
+            ['some-option' => 'value'],
+            ['src'],
+            self::wrap("--some-option 'value'", "'src'"),
+        ];
+
+        yield 'multiple paths are all escaped' => [[], ['src', 'tests'], self::wrap('', "'src' 'tests'")];
+
+        yield 'framework global options are excluded' => [
+            ['no-interaction' => true, 'verbose' => true, 'ansi' => true, 'help' => true],
+            ['src'],
+            self::wrap('', "'src'"),
+        ];
     }
 
-    private static function createExpectedCommandLinesString(): string
+    public function testProjectConfigFileIsPassedRightAfterWorkerName(): void
     {
-        $commandLineString = "'" . PHP_BINARY . "' '" . self::DUMMY_MAIN_SCRIPT . "'";
+        $workerCommandLine = $this->workerCommandLineFactory->create(
+            self::DUMMY_MAIN_SCRIPT,
+            'worker',
+            'ecs.php',
+            [],
+            ['src'],
+            'identifier',
+            2000
+        );
 
-        return $commandLineString . " worker --port 2000 --identifier 'identifier' 'src' --output-format 'json' --no-ansi";
+        $expectedCommand = "'" . PHP_BINARY . "' '" . self::DUMMY_MAIN_SCRIPT
+            . "' worker --config 'ecs.php' --port 2000 --identifier 'identifier' 'src' --output-format 'json' --no-ansi";
+
+        $this->assertSame($expectedCommand, $workerCommandLine);
+    }
+
+    /**
+     * Assemble the expected command line: options sit before --port, paths after --identifier.
+     */
+    private static function wrap(string $options, string $paths): string
+    {
+        $command = "'" . PHP_BINARY . "' '" . self::DUMMY_MAIN_SCRIPT . "' worker";
+
+        if ($options !== '') {
+            $command .= ' ' . $options;
+        }
+
+        return $command . " --port 2000 --identifier 'identifier' " . $paths . " --output-format 'json' --no-ansi";
     }
 }
