@@ -46,11 +46,7 @@ final readonly class WorkerCommandLineFactory
         string $identifier,
         int $port
     ): string {
-        $processCommandArray = [
-            escapeshellarg(PHP_BINARY),
-            escapeshellarg($baseScript),
-            $workerCommandName,
-        ];
+        $processCommandArray = [escapeshellarg(PHP_BINARY), escapeshellarg($baseScript), $workerCommandName];
 
         if ($projectConfigFile !== null) {
             $processCommandArray[] = '--config';

@@ -46,37 +46,49 @@ final class WorkerCommandLineFactoryTest extends TestCase
         yield 'no options, single path' => [[], ['src'], self::wrap('', "'src'")];
 
         yield 'output-format is excluded' => [
-            [TestOption::OUTPUT_FORMAT => 'console'],
+            [
+                TestOption::OUTPUT_FORMAT => 'console',
+            ],
             ['src'],
             self::wrap('', "'src'"),
         ];
 
         yield 'true bool option becomes a flag' => [
-            [TestOption::FIX => true],
+            [
+                TestOption::FIX => true,
+            ],
             ['src'],
             self::wrap('--fix', "'src'"),
         ];
 
         yield 'false bool option is omitted' => [
-            [TestOption::FIX => false],
+            [
+                TestOption::FIX => false,
+            ],
             ['src'],
             self::wrap('', "'src'"),
         ];
 
         yield 'null option is omitted' => [
-            [TestOption::MEMORY_LIMIT => null],
+            [
+                TestOption::MEMORY_LIMIT => null,
+            ],
             ['src'],
             self::wrap('', "'src'"),
         ];
 
         yield 'memory-limit uses the assign form' => [
-            [TestOption::MEMORY_LIMIT => '-1'],
+            [
+                TestOption::MEMORY_LIMIT => '-1',
+            ],
             ['src'],
             self::wrap('--memory-limit=-1', "'src'"),
         ];
 
         yield 'string option keeps the escaped value' => [
-            ['some-option' => 'value'],
+            [
+                'some-option' => 'value',
+            ],
             ['src'],
             self::wrap("--some-option 'value'", "'src'"),
         ];
@@ -84,7 +96,12 @@ final class WorkerCommandLineFactoryTest extends TestCase
         yield 'multiple paths are all escaped' => [[], ['src', 'tests'], self::wrap('', "'src' 'tests'")];
 
         yield 'framework global options are excluded' => [
-            ['no-interaction' => true, 'verbose' => true, 'ansi' => true, 'help' => true],
+            [
+                'no-interaction' => true,
+                'verbose' => true,
+                'ansi' => true,
+                'help' => true,
+            ],
             ['src'],
             self::wrap('', "'src'"),
         ];
